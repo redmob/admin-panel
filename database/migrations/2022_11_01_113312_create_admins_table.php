@@ -19,6 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('user_role',['admin','sub-admin'])->default('sub-admin');
             $table->rememberToken();
             $table->timestamps();
         });
@@ -29,6 +30,7 @@ class CreateAdminsTable extends Migration
                 'email' => 'admin@gmail.com',
                 'name' => 'Admin',
                 'password' => Hash::make('973012mi'),
+                'user_role' =>'admin',
             )
         );
     }

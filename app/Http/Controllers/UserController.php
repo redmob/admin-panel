@@ -2,56 +2,106 @@
 
 namespace App\Http\Controllers;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Models\User;
-use DataTables;
-use Illuminate\Support\Facades\DB;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
     {
-        if ($request->ajax()) {
-            $data = User::select('id', 'name', 'email', 'phone_number', DB::raw('DATE_FORMAT(last_active_datetime, "%d %b %Y") as last_active_datetime'), 'created_at', DB::raw('(select count(id) from users where tutor_id=users.id && user_role="student") as student'), 'selected_plan')->where('user_role', 'tutor')->latest();
+        $users=Admin::whereNotIn('id',[1])->latest()->paginate(10);
+        return view('users.index',compact('users'));
+    }
 
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('selected_plan', function ($row) {
-                    if ($row->selected_plan== "FREE") {
-                        return 'FREE';
-                    } else {
-                        return 'PAID';
-                    }
-                })
-                ->addColumn('created_at', function ($row) {
-                    return Carbon::parse($row->created_at)->format('d M Y');
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
 
-                })->addColumn('student', function ($row) {
-                    return DB::select('select count(*) as count from users where tutor_id = ?', array($row->id))[0]->count;
-                })
-                ->filter(function ($instance) use ($request) {
-                    if ($request->get('approved') == '1') {
-                        $instance->where('selected_plan', 'FREE');
-                    }
-                    if ($request->get('approved') == '0') {
-                        $instance->whereNotIn('selected_plan', ['FREE']);
-                    }
-                    if (!empty($request->get('search'))) {
-                        $instance->where(function ($w) use ($request) {
-                            $search = $request->get('search');
-                            $w->orWhere('name', 'LIKE', "%$search%")
-                                ->orWhere('email', 'LIKE', "%$search%");
-                        });
-                    }
-                })
-                ->rawColumns(['disable'])
-                ->make(true);
+        return view('users.create');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, ['name' => 'required','email'=>'required|email|unique:admins','password'=>'required|min:6','password_confirm' => 'required|same:password']);
+        $user=new Admin;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->save();
+        return redirect('users')->with('success','User has successfully added');
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $user=Admin::find($id);
+        return view('users.edit',compact('user'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $ruleList=['name' => 'required','email'=>'required|email',];
+        if (isset($request->password) && !empty($request->password)){
+            $ruleList['password']='required|min:6';
         }
+        $this->validate($request, $ruleList);
+        $user=Admin::find($id);
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if (isset($request->password) && !empty($request->password)){
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+        return redirect('users')->with('success','User has Updated Successfully');
+    }
 
-        return view('welcome');
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
 }
-
-

@@ -53,7 +53,7 @@ to get the desired effect
     <!-- Main Sidebar Container -->
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <!-- Brand Logo -->
-        <a href="/admin/dashbord" class="brand-link">
+        <a href="/dashboard" class="brand-link">
         </a>
 
         <!-- Sidebar -->
@@ -74,15 +74,21 @@ to get the desired effect
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <a href="{{asset('/admin/dashboard')}}" class="nav-link ">
+                        <a href="{{asset('/dashboard')}}" class="nav-link ">
                             <i class="fas fa-home"></i> <p>Home</p> </a>
                     </li>
 
                     <li class="nav-item">
-
-                        <a href="{{asset('blogs')}}" class="nav-link ">
-                            <i class="fas fa-stream"></i> <p>Blogs</p> </a>
+                        <a href="{{asset('/tutors')}}" class="nav-link ">
+                            <i class="fas fa-stream"></i> <p>Tutors</p> </a>
                     </li>
+                  @if(Auth::user()->user_role=='admin')
+                        <li class="nav-item">
+                            <a href="{{asset('/users')}}" class="nav-link ">
+                                <i class="fas fa-stream"></i> <p>Users</p> </a>
+                        </li>
+                  @endif
+
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
@@ -112,7 +118,7 @@ to get the desired effect
 
     <!-- Main Footer -->
     <footer class="main-footer">
-        <strong>Copyright &copy; Udit Dixit</a>.</strong>
+        <strong>Copyright &copy; Spaising Technologies</a>.</strong>
         All rights reserved.
         <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 1
