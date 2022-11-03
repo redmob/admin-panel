@@ -53,6 +53,7 @@
             var table = $('.data-table').DataTable({
                 processing: true,
                 serverSide: true,
+                order: [[0, "desc" ]],
                 ajax: {
                     url: "{{ route('tutor.index') }}",
                     data: function (d) {
