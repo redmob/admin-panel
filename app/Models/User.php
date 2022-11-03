@@ -40,4 +40,6 @@ class User extends Authenticatable
 
     protected $dateFormat = 'U';
 
+    public $timestamps = false;
+
 }
