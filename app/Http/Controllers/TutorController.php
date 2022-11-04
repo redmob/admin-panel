@@ -21,7 +21,7 @@ class TutorController extends Controller
                     if ($row->selected_plan == "FREE") {
                         return 'FREE';
                     } else {
-                        return 'PAID';
+                        return $row->selected_plan;
                     }
                 })
                 ->addColumn('created_at', function ($row) {
