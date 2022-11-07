@@ -33,6 +33,7 @@
                 <th>Last Login</th>
                 <th>Joining Date</th>
                 <th>Fee Status</th>
+                <th>Purchased Date</th>
                 <th>Total Students</th>
             </tr>
             </thead>
@@ -69,6 +70,7 @@
                     {data: 'last_active_datetime', name: 'last_active_datetime'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'selected_plan', name: 'selected_plan'},
+                    {data: 'purchased_date', name: 'purchased_date'},
                     {data: 'student', name: 'student'},
                 ]
             });

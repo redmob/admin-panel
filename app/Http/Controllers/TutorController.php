@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,10 +14,14 @@ class TutorController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::select('id', 'name', 'email', 'phone_number', DB::raw('DATE_FORMAT(last_active_datetime, "%d %b %Y") as last_active_datetime'), 'created_at', DB::raw('(select count(id) from users where tutor_id=users.id && user_role="student") as student'), 'selected_plan')->where('user_role', 'tutor')->latest();
+            $data = User::select('id', 'name', 'email', 'phone_number', 'last_active_datetime', 'created_at', DB::raw('(select count(id) from users where tutor_id=users.id && user_role="student") as student'), 'selected_plan', 'purchased_date')->where('user_role', 'tutor')->latest();
 
             return Datatables::of($data)
                 ->addIndexColumn()
+//                ->orderColumns(['name', 'email','last_active_datetime'], '-:column $1')
+                ->orderColumn('selected_plan', function ($query, $order) {
+                    $query->orderBy('selected_plan', $order);
+                })
                 ->addColumn('selected_plan', function ($row) {
                     if ($row->selected_plan == "FREE") {
                         return 'FREE';
@@ -24,11 +29,27 @@ class TutorController extends Controller
                         return $row->selected_plan;
                     }
                 })
+                ->addColumn('last_active_datetime', function ($row) {
+                    if (isset($row->last_active_datetime) && !empty($row->last_active_datetime)) {
+                        return Carbon::parse($row->last_active_datetime)->format('d M Y H:i:s');
+                    }
+                    return "";
+                })
+                ->addColumn('purchased_date', function ($row) {
+                    if (isset($row->purchased_date) && !empty($row->purchased_date)) {
+                        return Carbon::parse($row->purchased_date)->format('d M Y');
+                    }
+                    return "";
+                })
                 ->addColumn('created_at', function ($row) {
                     return Carbon::parse($row->created_at)->format('d M Y');
 
-                })->addColumn('student', function ($row) {
+                })
+                ->addColumn('student', function ($row) {
                     return DB::select('select count(*) as count from users where tutor_id = ?', array($row->id))[0]->count;
+                })
+                ->orderColumn('purchased_date', function ($query) {
+                    $query->orderBy('purchased_date');
                 })
                 ->filter(function ($instance) use ($request) {
                     if ($request->get('approved') == '1') {
