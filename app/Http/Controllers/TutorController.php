@@ -19,9 +19,9 @@ class TutorController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
 //                ->orderColumns(['name', 'email','last_active_datetime'], '-:column $1')
-                ->orderColumn('selected_plan', function ($query, $order) {
-                    $query->orderBy('selected_plan', $order);
-                })
+//                ->orderColumn('selected_plan', function ($query, $order) {
+//                    $query->orderBy('selected_plan', $order);
+//                })
                 ->addColumn('selected_plan', function ($row) {
                     if ($row->selected_plan == "FREE") {
                         return 'FREE';
