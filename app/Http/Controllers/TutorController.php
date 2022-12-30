@@ -46,7 +46,8 @@ class TutorController extends Controller
 
                 })
                 ->addColumn('student', function ($row) {
-                    return DB::select('select count(*) as count from users where tutor_id = ?', array($row->id))[0]->count;
+//                    return DB::select('select count(*) as count from users where (tutor_id = ? && user_role= ?)', array($row->id,"student"))[0]->count;
+                    return User::where([['tutor_id','=',$row->id],['user_role','=','student']])->count();
                 })
                 ->orderColumn('purchased_date', function ($query) {
                     $query->orderBy('purchased_date');
