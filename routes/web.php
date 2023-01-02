@@ -20,7 +20,7 @@ Auth::routes([
 
 Route::middleware(['auth:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
-    Route::get('/tutors', [TutorController::class,'index'])->name('tutor.index');
+    Route::resource('/tutors', TutorController::class);
     Route::resource('users', UserController::class);
     Route::resource('account-setup', AccountSetupController::class);
 });

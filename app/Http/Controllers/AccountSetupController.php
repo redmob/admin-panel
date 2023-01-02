@@ -35,9 +35,6 @@ class AccountSetupController extends Controller
                     }
                     return "payment";
                 })
-                ->addColumn('action', function ($row) {
-                    return '<a href="/account-setup/'.$row->id.'/edit">Edit</a>';
-                })
                 ->addColumn('razorpay_verified', function ($row) {
                     if ($row->razorpay_verified){
                         return "Yes";
@@ -50,6 +47,9 @@ class AccountSetupController extends Controller
                     } else {
                             return 'No';
                     }
+                })
+                ->addColumn('action', function ($row) {
+                    return '<a href="/account-setup/'.$row->id.'/edit">Edit</a>';
                 })
                 ->filter(function ($instance) use ($request) {
                     if ($request->get('approved') == '1') {

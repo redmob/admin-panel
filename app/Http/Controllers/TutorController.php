@@ -11,11 +11,15 @@ use DataTables;
 
 class TutorController extends Controller
 {
+
     public function index(Request $request)
     {
-        if ($request->ajax()) {
-            $data = User::select('id', 'name', 'email', 'phone_number', 'last_active_datetime', 'created_at', DB::raw('(select count(id) from users where tutor_id=users.id && user_role="student") as student'), 'selected_plan', 'purchased_date')->where('user_role', 'tutor')->latest();
 
+        if ($request->ajax()) {
+            $data = User::select('id', 'name', 'email', 'phone_number', 'last_active_datetime', 'created_at', DB::raw('(select count(id) from users where tutor_id=users.id && user_role="student") as student'), 'selected_plan', 'purchased_date','tutor_verify')->where('user_role', 'tutor')->latest();
+            foreach ($data as $datum) {
+                dd($datum->tutor_verify);
+           }
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('selected_plan', function ($row) {
@@ -45,8 +49,12 @@ class TutorController extends Controller
 //                    return DB::select('select count(*) as count from users where (tutor_id = ? && user_role= ?)', array($row->id,"student"))[0]->count;
                     return User::where([['tutor_id','=',$row->id],['user_role','=','student']])->count();
                 })
-                ->orderColumn('purchased_date', function ($query) {
-                    $query->orderBy('purchased_date');
+                ->addColumn('action', function ($row) {
+                    if ($row->tutor_verify){
+                        return '<a href="/tutors/'.$row->id.'/edit">UnVerify</a>';
+                    } else {
+                        return '<a href="/tutors/'.$row->id.'/edit">Verify</a>';
+                    }
                 })
                 ->filter(function ($instance) use ($request) {
                     if ($request->get('approved') == '1') {
@@ -64,11 +72,26 @@ class TutorController extends Controller
                     }
                 })
 
-                ->rawColumns(['disable'])
+                ->rawColumns(['disable','action'])
                 ->make(true);
         }
 
-        return view('tutors');
+        return view('tutors.index');
+    }
+
+    public function edit($id)
+    {
+        $user = User::find($id);
+        return view('tutors.edit',compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+        $user->tutor_verify = intval($request->tutor_verify);
+        $user->save();
+        $message =$request->tutor_verify==1?"Successfully Verified":"SuccessFully Unverified";
+        return redirect()->route('tutors.index')->with('success',$message);
     }
 }
 

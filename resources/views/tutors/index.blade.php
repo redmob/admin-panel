@@ -7,9 +7,13 @@
     <link href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 @endsection
 @section('content')
-    <div class="container">
+    <div class="container" style="overflow-x: auto">
         <h1>Tutors List</h1>
-
+        @if(session()->has('success'))
+            <div class="alert alert-success">
+                {{session('success')}}
+            </div>
+        @endif
         <div class="card">
             <div class="card-body">
                 <div class="form-group">
@@ -35,6 +39,7 @@
                 <th>Fee Status</th>
                 <th>Purchased Date</th>
                 <th>Total Students</th>
+                <th>Action</th>
             </tr>
             </thead>
             <tbody>
@@ -56,7 +61,7 @@
                 serverSide: true,
                 order: [[0, "desc" ]],
                 ajax: {
-                    url: "{{ route('tutor.index') }}",
+                    url: "{{ route('tutors.index') }}",
                     data: function (d) {
                         d.approved = $('#approved').val(),
                             d.search = $('input[type="search"]').val()
@@ -72,6 +77,7 @@
                     {data: 'selected_plan', name: 'selected_plan'},
                     {data: 'purchased_date', name: 'purchased_date'},
                     {data: 'student', name: 'student'},
+                    {data: 'action', name: 'action'},
                 ]
             });
 
