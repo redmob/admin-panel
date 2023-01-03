@@ -50,21 +50,32 @@ class TutorController extends Controller
                     return User::where([['tutor_id','=',$row->id],['user_role','=','student']])->count();
                 })
                 ->addColumn('status', function ($row) {
-                    if ($row->tutor_verify==1){
-                        return 'Verified';
-                    } else if ($row->tutor_verify==2) {
-                        return 'Rejected';
-                    } else {
-                        return 'UnVerified';
+                    if (isset($row->tutor_verify) && !empty($row->tutor_verify))
+                    {
+                        if ($row->tutor_verify==1){
+                            return 'Verified';
+                        } else if ($row->tutor_verify==2) {
+                            return 'Rejected';
+                        } else {
+                            return 'UnVerified';
+                        }
+                    }else{
+
+                        return "-";
                     }
+
                 })
                 ->addColumn('action', function ($row) {
-                    if ($row->tutor_verify==1){
-                        return '<a href="/tutors/'.$row->id.'/edit">UnVerify</a>';
-                    } else if ($row->tutor_verify==2) {
-                        return '<a href="/tutors/'.$row->id.'/edit">Rejected</a>';
+                    if (isset($row->tutor_verify) && !empty($row->tutor_verify)) {
+                        if ($row->tutor_verify == 1) {
+                            return '<a href="/tutors/' . $row->id . '/edit">UnVerify</a>';
+                        } else if ($row->tutor_verify == 2) {
+                            return '<a href="/tutors/' . $row->id . '/edit">Rejected</a>';
+                        } else {
+                            return '<a href="/tutors/' . $row->id . '/edit">Verify</a>';
+                        }
                     } else {
-                        return '<a href="/tutors/'.$row->id.'/edit">Verify</a>';
+                        return '-';
                     }
                 })
                 ->filter(function ($instance) use ($request) {
