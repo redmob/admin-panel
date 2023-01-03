@@ -49,9 +49,20 @@ class TutorController extends Controller
 //                    return DB::select('select count(*) as count from users where (tutor_id = ? && user_role= ?)', array($row->id,"student"))[0]->count;
                     return User::where([['tutor_id','=',$row->id],['user_role','=','student']])->count();
                 })
+                ->addColumn('status', function ($row) {
+                    if ($row->tutor_verify==1){
+                        return 'Verified';
+                    } else if ($row->tutor_verify==2) {
+                        return 'Rejected';
+                    } else {
+                        return 'UnVerified';
+                    }
+                })
                 ->addColumn('action', function ($row) {
-                    if ($row->tutor_verify){
+                    if ($row->tutor_verify==1){
                         return '<a href="/tutors/'.$row->id.'/edit">UnVerify</a>';
+                    } else if ($row->tutor_verify==2) {
+                        return '<a href="/tutors/'.$row->id.'/edit">Rejected</a>';
                     } else {
                         return '<a href="/tutors/'.$row->id.'/edit">Verify</a>';
                     }

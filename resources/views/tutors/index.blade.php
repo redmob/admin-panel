@@ -39,6 +39,7 @@
                 <th>Fee Status</th>
                 <th>Purchased Date</th>
                 <th>Total Students</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
             </thead>
@@ -77,6 +78,7 @@
                     {data: 'selected_plan', name: 'selected_plan'},
                     {data: 'purchased_date', name: 'purchased_date'},
                     {data: 'student', name: 'student'},
+                    {data: 'status', name: 'status'},
                     {data: 'action', name: 'action'},
                 ]
             });

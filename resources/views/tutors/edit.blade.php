@@ -157,13 +157,31 @@
                                     </tr>
                                     </tbody>
                                 </table>
-                                <input type="hidden" name="tutor_verify" value="{{$user->tutor_verify==1?0:1}}">
+
+                                <div class="form-group mt-4">
+                                    <label for="">Add Status</label>
+                                    <select name="tutor_verify" class="form-control">
+                                        @if($user->tutor_verify==0)
+                                            <option value="1">Verified</option>
+                                            <option value="2">Reject</option>
+                                            <option value="0" selected>UnVerify</option>
+                                        @elseif($user->tutor_verify==1)
+                                            <option value="1" selected>Verified</option>
+                                            <option value="2">Reject</option>
+                                            <option value="0">UnVerify</option>
+                                        @else
+                                            <option value="1">Verified</option>
+                                            <option value="2" selected>Reject</option>
+                                            <option value="0">UnVerify</option>
+                                        @endif
+                                    </select>
+                                </div>
 
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-success">
-                                    {{$user->tutor_verify==1?"Unverify" : "Verify"}}
+                                   Submit
                                 </button>
                             </div>
                         </form>
