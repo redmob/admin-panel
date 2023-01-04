@@ -82,10 +82,10 @@ to get the desired effect
                         <a href="{{asset('/tutors')}}" class="nav-link ">
                             <i class="fas fa-stream"></i> <p>Tutors</p> </a>
                     </li>
-{{--                    <li class="nav-item">--}}
-{{--                        <a href="{{asset('/account-setup')}}" class="nav-link ">--}}
-{{--                            <i class="fas fa-stream"></i> <p>Account Setup</p> </a>--}}
-{{--                    </li>--}}
+                    <li class="nav-item">
+                        <a href="{{asset('/account-setup')}}" class="nav-link ">
+                            <i class="fas fa-stream"></i> <p>Account Setup</p> </a>
+                    </li>
                   @if(Auth::user()->user_role=='admin')
                         <li class="nav-item">
                             <a href="{{asset('/users')}}" class="nav-link ">
