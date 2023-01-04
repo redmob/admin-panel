@@ -50,7 +50,7 @@ class TutorController extends Controller
                     return User::where([['tutor_id','=',$row->id],['user_role','=','student']])->count();
                 })
                 ->addColumn('status', function ($row) {
-                    if (isset($row->tutor_verify) && !empty($row->tutor_verify))
+                    if (isset($row->tutor_verify))
                     {
                         if ($row->tutor_verify==1){
                             return 'Verified';
@@ -66,7 +66,7 @@ class TutorController extends Controller
 
                 })
                 ->addColumn('action', function ($row) {
-                    if (isset($row->tutor_verify) && !empty($row->tutor_verify)) {
+                    if (isset($row->tutor_verify)) {
                         if ($row->tutor_verify == 1) {
                             return '<a href="/tutors/' . $row->id . '/edit">UnVerify</a>';
                         } else if ($row->tutor_verify == 2) {
