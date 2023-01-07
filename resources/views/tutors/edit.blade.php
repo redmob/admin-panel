@@ -88,7 +88,10 @@
                                         <td>{{$user->country_name}}</td>
                                         <th><strong>Intro Video:</strong></th>
                                         <td>
-                                           Video Player
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#video-intro">
+                                                Play Video
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -96,15 +99,17 @@
                                         <td>{{$user->intro_text}}</td>
                                         <th><strong>languages:</strong></th>
                                         <td>
-                                            languages
+                                           {{$user->languages}}
                                         </td>
                                     </tr>
                                     <tr>
                                         <th scope="row">Education</th>
                                         <td>{{$user->education}}</td>
-                                        <th><strong>certificatio:</strong></th>
+                                        <th><strong>certification:</strong></th>
                                         <td>
-                                            View Certificate
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#check-certificate">
+                                               Check Certificate
+                                            </button>
                                         </td>
                                     </tr>
                                     <tr>
@@ -190,6 +195,52 @@
             </div>
         </div>
     </section>
+    <div class="modal fade" id="video-intro" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Intro Video</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <video width="320" height="240" controls>
+                        <source src="{{$user->intro_video}}" type="video/mp4">
+
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="check-certificate" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Certificate</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if(pathinfo($user->certificate_file, PATHINFO_EXTENSION)=="pdf")
+                        <a href="{{$user->certificate_file}}">check Pdf</a>
+                    @else
+                        <img src="{{$user->certificate_file}}" class="img-fluid" alt="certificate File">
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+@section('scripts')
 
 @endsection
 
